@@ -6,7 +6,7 @@ st.set_page_config(page_title="Churn Modelling Dashboard", layout="wide")
 st.title("Churn Modelling Dashboard")
 @st.cache_data
 def df_get_from_csv():
-    df = pd.read_csv(r"E:\road masr\project\Churn_Modelling.csv")
+    df = pd.read_csv("Churn_Modelling.csv")
     return df
 df=df_get_from_csv()
 df.head()
