@@ -6,7 +6,7 @@ st.set_page_config(page_title="Churn Modelling Dashboard", layout="wide")
 st.title("Churn Modelling Dashboard")
 @st.cache_data
 def df_get_from_csv():
-    df = pd.read_csv("Churn_Modelling.csv")
+    df = pd.read_csv(r"E:\road masr\project\Churn_Modelling.csv")
     return df
 df=df_get_from_csv()
 df.head()
@@ -18,14 +18,16 @@ df.duplicated().sum()
 df.drop_duplicates(inplace=True)
 df['joining_year']=2024-df['Tenure']
 # Streamlit app
-# side bar
-st.sidebar.header("please filter here:")
-gender=st.sidebar.multiselect("select gender",options=df['Gender'].unique(),default=df['Gender'].unique())
-year=st.sidebar.multiselect("select year",options=df['joining_year'].unique(),default=df['joining_year'].unique())
-exited=st.sidebar.multiselect("select if custmoer exited or not ",options=df['Exited'].unique(),default=df['Exited'].unique())
-df=df.query('Gender==@gender & joining_year==@year & Exited==@exited')
-# Create a layout with columns
-col1, col2 = st.columns([2, 2])
+# Streamlit app
+# Side bar
+st.sidebar.header("Please filter here:")
+gender = st.sidebar.multiselect("Select Gender", options=df['Gender'].unique(), default=df['Gender'].unique())
+year = st.sidebar.multiselect("Select Year", options=df['joining_year'].unique(), default=df['joining_year'].unique())
+exited = st.sidebar.multiselect("Select if customer exited or not", options=df['Exited'].unique(), default=df['Exited'].unique())
+df = df.query('Gender==@gender & joining_year==@year & Exited==@exited')
+
+# Create a layout with three columns
+col1, col2, col3 = st.columns([2, 2, 2])
 
 # Gender Distribution Pie Chart
 with col1:
@@ -45,20 +47,23 @@ with col2:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - The average age of customers is around 38.13 years..
+            - The average age of customers is around 38.13 years.
         """)
-
-# Active Member Distribution Pie Chart
-with col1:
-    st.subheader("Active Member Distribution")
-    fig = px.pie(df, names='IsActiveMember', title="IsActiveMember Distribution", color_discrete_sequence=['red', 'black'])
+# Churnde customers by age group
+with col3:
+    st.subheader("Churnde customers by age group")
+    age_bins = [18, 30, 40, 50, 60, 70, 80]
+    age_labels = ['18-30', '31-40', '41-50', '51-60', '61-70', '71-80']
+    df['AgeGroup'] = pd.cut(df['Age'], bins=age_bins, labels=age_labels, right=False)
+    churn_count = df[df['Exited'] == 1].groupby('AgeGroup')['Exited'].count().reset_index()
+    fig = px.bar(churn_count, x='AgeGroup', y='Exited',title='Number of Churned Customers by Age Group',labels={'Exited': 'Number of Churned Customers', 'AgeGroup': 'Age Group'},height=450,color_discrete_sequence=['red'])
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - Approximately 51.5% of customers are active members (IsActiveMember).
+           - Most customers who churned are between the ages of 41 and 50.
         """)
 # Geography Distribution Bar Chart
-with col2:
+with col1:
     st.subheader("Geography Distribution")
     geo_counts = df['Geography'].value_counts().reset_index()
     geo_counts.columns = ['Geography', 'Count']
@@ -66,25 +71,25 @@ with col2:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - The majority of our customers are from france
+            - The majority of our customers are from France.
         """)
 
 # Credit Card Ownership Bar Chart
-with col1:
-    st.subheader("Credit Ownership Distribution")
+with col2:
+    st.subheader("Credit Card Ownership Distribution")
     credit = df['HasCrCard'].value_counts().reset_index()
-    credit.columns = ['status', 'count']
-    fig = px.bar(credit, y='count', x='status', title='Has Credit Card Distribution', color_discrete_sequence=['red', 'lightred'])
+    credit.columns = ['Status', 'Count']
+    fig = px.bar(credit, y='Count', x='Status', title='Has Credit Card Distribution', color_discrete_sequence=['red', 'lightred'])
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
             - A significant proportion (around 75.4%) of customers have a credit card (HasCrCard).
         """)
 
-# credit card score Distribution Histogram
-with col2:
-    st.subheader("CreditScore")
-    fig = px.histogram(df, x='CreditScore', title="CreditScore", color_discrete_sequence=['blue'])
+# Credit Score Distribution Histogram
+with col3:
+    st.subheader("Credit Score Distribution")
+    fig = px.histogram(df, x='CreditScore', title="Credit Score Distribution", color_discrete_sequence=['blue'])
     fig.update_traces(marker=dict(line=dict(color='black', width=2)))
     st.plotly_chart(fig)
     with st.expander("Insights"):
@@ -93,13 +98,12 @@ with col2:
             - The minimum credit score is 350, and the maximum is 850.
         """)
 
-
 # Exited Customers Bar Chart
 with col1:
     st.subheader("Exited Customers Distribution")
     Exited = df['Exited'].value_counts().reset_index()
-    Exited.columns = ['status', 'count']
-    fig = px.bar(Exited, y='count', x='status', title='Exited Customers Distribution', color_discrete_sequence=['blue'])
+    Exited.columns = ['Status', 'Count']
+    fig = px.bar(Exited, y='Count', x='Status', title='Exited Customers Distribution', color_discrete_sequence=['blue'])
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
@@ -112,13 +116,23 @@ with col2:
     st.subheader("Joining Year Distribution")
     df['joining_year'] = 2024 - df['Tenure']
     year = df['joining_year'].value_counts().reset_index()
-    year.columns = ['joining_year', 'Count']
-    year = year.sort_values(by='joining_year')
-    fig = px.line(year, x='joining_year', y='Count', title="Joining Year Distribution", color_discrete_sequence=['red'])
+    year.columns = ['Joining Year', 'Count']
+    year = year.sort_values(by='Joining Year')
+    fig = px.line(year, x='Joining Year', y='Count', title="Joining Year Distribution", color_discrete_sequence=['red'])
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
             - The year 2023 saw the highest number of customers, totaling 1035.
             - Conversely, 2024 had the lowest number of customers, with only 415.
             - On average, we attract around 1000 customers each year.
+        """)
+
+# Active Member Distribution Pie Chart
+with col3:
+    st.subheader("Active Member Distribution")
+    fig = px.pie(df, names='IsActiveMember', title="Active Member Distribution", color_discrete_sequence=['red', 'black'])
+    st.plotly_chart(fig)
+    with st.expander("Insights"):
+        st.write("""
+            - Approximately 51.5% of customers are active members (IsActiveMember).
         """)
