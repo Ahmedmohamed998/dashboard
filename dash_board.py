@@ -6,7 +6,7 @@ st.set_page_config(page_title="Churn Modelling Dashboard", layout="wide")
 st.title("Churn Modelling Dashboard")
 @st.cache_data
 def df_get_from_csv():
-    df = pd.read_csv(r"E:\road masr\project\Churn_Modelling.csv")
+    df = pd.read_csv("Churn_Modelling.csv")
     return df
 df=df_get_from_csv()
 df.head()
@@ -18,8 +18,7 @@ df.duplicated().sum()
 df.drop_duplicates(inplace=True)
 df['joining_year']=2024-df['Tenure']
 # Streamlit app
-# Streamlit app
-# Side bar
+# side bar
 st.sidebar.header("Please filter here:")
 gender = st.sidebar.multiselect("Select Gender", options=df['Gender'].unique(), default=df['Gender'].unique())
 year = st.sidebar.multiselect("Select Year", options=df['joining_year'].unique(), default=df['joining_year'].unique())
