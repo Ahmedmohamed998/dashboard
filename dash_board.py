@@ -66,7 +66,7 @@ with col2:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - The majority of our customers are form france
+            - The majority of our customers are from france
         """)
 
 # Credit Card Ownership Bar Chart
