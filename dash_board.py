@@ -12,6 +12,7 @@ df=df_get_from_csv()
 df.duplicated().sum()
 #drop dublicates
 df.drop_duplicates(inplace=True)
+df['Exited']=[1 if i>0.5 else 0 for i in df['Exited']]
 df['joining_year']=2024-df['Tenure']
 # Streamlit app
 # Side bar
