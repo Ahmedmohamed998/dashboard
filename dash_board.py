@@ -6,13 +6,9 @@ st.set_page_config(page_title="Churn Modelling Dashboard", layout="wide")
 st.title("Churn Modelling Dashboard")
 @st.cache_data
 def df_get_from_csv():
-    df = pd.read_csv("Churn_Modelling.csv")
+    df = pd.read_csv("Bank.csv")
     return df
 df=df_get_from_csv()
-df.head()
-df.isnull().sum()
-#drop null because it is too small
-df.dropna(inplace=True)
 df.duplicated().sum()
 #drop dublicates
 df.drop_duplicates(inplace=True)
