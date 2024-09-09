@@ -14,7 +14,7 @@ df.duplicated().sum()
 df.drop_duplicates(inplace=True)
 df['joining_year']=2024-df['Tenure']
 # Streamlit app
-# side bar
+# Side bar
 st.sidebar.header("Please filter here:")
 gender = st.sidebar.multiselect("Select Gender", options=df['Gender'].unique(), default=df['Gender'].unique())
 year = st.sidebar.multiselect("Select Year", options=df['joining_year'].unique(), default=df['joining_year'].unique())
@@ -31,14 +31,14 @@ with col1:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - Approximately 54.6% of the customers are male.
+            - Approximately 56.4% of the customers are male.
         """)
 
 # Age Distribution Histogram
 with col2:
     st.subheader("Age Distribution")
     fig = px.histogram(df, x='Age', title="Age Distribution", color_discrete_sequence=['blue'])
-    fig.update_traces(marker=dict(line=dict(color='black', width=2)))
+    fig.update_traces(marker=dict(line=dict(color='blue', width=2)))
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
@@ -85,7 +85,7 @@ with col2:
 with col3:
     st.subheader("Credit Score Distribution")
     fig = px.histogram(df, x='CreditScore', title="Credit Score Distribution", color_discrete_sequence=['blue'])
-    fig.update_traces(marker=dict(line=dict(color='black', width=2)))
+    fig.update_traces(marker=dict(line=dict(color='blue', width=2)))
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
@@ -102,8 +102,8 @@ with col1:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - About 21.2% of customers have exited the bank (Exited = 1).
-            - The majority (about 78.8%) have not exited the bank (Exited = 0).
+            - About 12.7% of customers have exited the bank (Exited = 1).
+            - The majority (about 87.3%) have not exited the bank (Exited = 0).
         """)
 
 # Joining Year Line Chart
@@ -117,9 +117,9 @@ with col2:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - The year 2023 saw the highest number of customers, totaling 1035.
-            - Conversely, 2024 had the lowest number of customers, with only 415.
-            - On average, we attract around 1000 customers each year.
+            - The year 2022 saw the highest number of customers, totaling 30.331k.
+            - Conversely, 2024 had the lowest number of customers, with only 8431.
+            - On average, we attract around 27.500k customers each year.
         """)
 
 # Active Member Distribution Pie Chart
@@ -129,5 +129,5 @@ with col3:
     st.plotly_chart(fig)
     with st.expander("Insights"):
         st.write("""
-            - Approximately 51.5% of customers are active members (IsActiveMember).
+            - Approximately 50.3% of customers are active members (IsActiveMember).
         """)
