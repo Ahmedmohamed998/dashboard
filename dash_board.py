@@ -9,7 +9,7 @@ st.markdown("")
 st.markdown("")
 @st.cache_data
 def df_get_from_csv():
-    df = pd.read_csv(r"E:\road masr\project\Bank.csv")
+    df = pd.read_csv(r"Bank.csv")
     return df
 
 df = df_get_from_csv()
